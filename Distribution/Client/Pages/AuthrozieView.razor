@@ -1,0 +1,20 @@
+﻿@inherits LayoutComponentBase
+
+@code {
+    protected AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    protected bool IsUserAuthenticated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        IsUserAuthenticated = authState.User.Identity.IsAuthenticated;
+    }
+    }
+
+    @if (IsUserAuthenticated)
+{
+    @Body;
+}
+
+

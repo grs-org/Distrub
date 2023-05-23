@@ -1,0 +1,45 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<input type="button" @onclick="Submit" />
+
+
+@code{
+    public string CurrentUserId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await _stateProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+        if (user == null) return;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            //CurrentUserId = user.FindFirst();
+            //FirstName = user.GetFirstName();
+            //Animateur = user.GetAnimateur();
+            //if (Animateur.Length > 0)
+            //{
+            //    FirstLetterOfName = Animateur[0];
+            //}
+
+    }
+    }
+    async Task Submit()
+    {
+      
+        try
+        {
+            await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("refreshToken");
+            ((UniStateProvider)_stateProvider).MarkUserAsLoggedOut();
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+            _navigationManager.NavigateTo("/login");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            
+            _navigationManager.NavigateTo(_navigationManager.Uri, forceLoad: true);
+        }
+    }
+}

@@ -1,0 +1,104 @@
+﻿@inherits LayoutComponentBase
+
+@using Distribution.Client.Extensions
+@using Distribution.Client.Pages
+@using Distribution.Shared
+@using Distribution.Shared.Application
+@using Distribution.Shared.Response
+@using Microsoft.AspNetCore.SignalR.Client
+@using Radzen.Blazor
+@using Radzen;
+@using System.Net.Http.Headers
+@inject HttpClient Http
+<style>
+    .head-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: auto;
+}
+</style>
+<RadzenDialog />
+@*<RadzenNotification />
+*@
+
+
+@if(!IsUserAuthenticated){
+    <Login/>
+
+}
+else{
+            <RadzenLayout>
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+            <RadzenLabel Text=@($"TAWZI3 ---------> Id {CurrentUserId}") />
+            <div class="head-content">
+
+                <FormAutocompletion></FormAutocompletion>
+                <Notification></Notification>
+                <Profile></Profile>
+            </div>
+
+
+        </RadzenStack>
+
+    </RadzenHeader>
+        <SideBar sidebar1Expanded="sidebar1Expanded" />
+
+
+    <RadzenBody>
+        @Body
+    </RadzenBody>
+</RadzenLayout>
+
+}
+     
+     
+
+@code{
+    bool sidebar1Expanded = true;
+    public string CurrentUserId { get; set; }
+    public string UserName { get; set; }
+
+    protected bool IsUserAuthenticated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
+        //string baseUrl = "api/user/GetAsync";
+       
+        var state = await _stateProvider.GetAuthenticationStateAsync();
+        IsUserAuthenticated = state.User.Identity.IsAuthenticated;
+        var user = state.User;
+        if (user == null) return;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            CurrentUserId = user.GetUserId();
+            UserName = user.GetFirstName();
+            //var requestUrl = $"{baseUrl}?param={CurrentUserId}";
+
+            //var response = await Http.GetAsync("api/user");
+
+            //var responseAsString = await response.Content.ReadFromJsonAsync<List<UserLoginDto>>();
+
+            //if(responseAsString!=null){
+            //    var u = responseAsString.FirstOrDefault(x => x.Id == CurrentUserId);
+            //    UserName = u.Username;
+            //}
+
+        }
+       
+
+       
+
+    }
+
+
+  
+
+}
+
+
+

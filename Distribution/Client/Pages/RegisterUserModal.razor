@@ -1,0 +1,134 @@
+﻿@*@page "/RegisterModal"
+*@
+@using Distribution.Shared
+@using Distribution.Shared.Requests
+@using Radzen
+@using Radzen.Blazor
+@inject DialogService DialogService
+@inject HttpClient Http
+
+   @* <RadzenText Text="Enregistrer Utilisateur" />
+    <br/>*@
+
+@*<RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 420px;height: max-content;">
+
+    <RadzenText TextStyle="TextStyle.H6"  class="rz-color-on-primary-light"><strong style="color: #0000008f;">Enregistrer Utilisateur</strong></RadzenText>*@
+    
+    <RadzenRow RowGap="0">
+            <RadzenColumn SizeSM="6">
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">FirstName</RadzenText>
+
+            <RadzenTextBox @bind-Value="user.FirstName">FirstName</RadzenTextBox>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">UserName</RadzenText>
+
+                <RadzenTextBox  @bind-Value="user.UserName" >UserName</RadzenTextBox>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Email</RadzenText>
+
+                <RadzenTextBox @bind-Value="user.Email" >Email</RadzenTextBox>
+                <br/>
+            <RadzenCheckBox @bind-Value=user.ActivateUser Name="ActivateUser" />
+            <RadzenLabel Text="Activer Utilisateur ?" Component="ActivateUser" Style="margin-left: 8px; vertical-align: middle;" />
+           
+            </RadzenColumn>
+            <RadzenColumn SizeSM="6">
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">LastName</RadzenText>
+
+            <RadzenTextBox @bind-Value="user.LastName">LastName</RadzenTextBox>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">Password</RadzenText>
+
+            <RadzenPassword @bind-Value="user.Password">Password</RadzenPassword>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">PhoneNumber</RadzenText>
+
+                <RadzenTextBox  @bind-Value="user.PhoneNumber" >PhoneNumber</RadzenTextBox>
+        <br />
+            <RadzenCheckBox @bind-Value=user.AutoConfirmEmail Name="AutoConfirmEmail" />
+            <RadzenLabel Text="Confirmer E-mail" Component="ActivateUser" Style="margin-left: 8px; vertical-align: middle;" />
+            </RadzenColumn>
+        </RadzenRow>
+       <div class="blockquote-footer">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="10">
+        <RadzenButton Variant="Variant.Text" class="rz-text-secondary-color" Click="Cancel" Text="Cancel" />
+        <RadzenButton Variant="Variant.Text" Click="AddUser" Text="Save" />
+    </RadzenStack>
+</div>
+@*</RadzenCard>
+*@@*<EditForm Model="@user" OnValidSubmit="AddUser">
+@*    <BlazoredModal>
+    <Modal Title="Register New User">
+        <!-- Dialog content here -->
+        <p>Modal content goes here...</p>
+    </Modal>
+</BlazoredModal>
+ <div xs="12" md="6">
+        <RadzenTextBox @bind-Value="user.Username"> UserName</RadzenTextBox>
+
+ </div> 
+ <div xs="12" md="6">
+        <RadzenTextBox @bind-Value="user.Email"> Email</RadzenTextBox>
+
+ </div>
+  <div xs="12" md="6">
+        <RadzenTextBox @bind-Value="user.Password"> Password</RadzenTextBox>
+
+      </div>
+    <div xs="12" md="6">
+        <RadzenTextBox @bind-Value="user.PhoneNumber"> Telephone</RadzenTextBox>
+
+    </div>
+
+
+<RadzenButton Click="AddUser" Text="Add"/>
+
+
+        
+</EditForm>
+*@
+
+
+@*<div class="rz-p-12 rz-text-align-center">
+    <RadzenButton Text="Dialog with inline Blazor content" ButtonStyle="ButtonStyle.Secondary" Click=@ShowInlineDialog />
+</div>
+
+@code {
+    int orderID = 10248;
+
+    async Task ShowInlineDialog()
+    {
+        var result = await DialogService.OpenAsync("Simple Dialog", ds =>
+        @<RadzenStack Gap="1.5rem">
+            <p>Confirm Order ID <b>@orderID</b>?</p>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+                    <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+                </RadzenStack>
+                <RadzenButton Text="Refresh" Click="(() => { orderID = 10249; ds.Refresh(); })" ButtonStyle="ButtonStyle.Light" />
+            </RadzenStack>
+        </RadzenStack>);
+    }
+}*@
+
+@code{
+
+    public RegisterRequest user = new();
+
+    public async Task AddUser()
+    {
+        try{
+            var result = await Http.PostAsJsonAsync("api/User", user);
+            //var response = await result.Content.ReadFromJsonAsync<string>();
+            //if (response.Equals("Success"))
+            //{
+            _navigationManager.NavigateTo("/ListUsers");
+
+        }
+        catch(Exception e){
+
+        }
+
+    }
+
+    public void Cancel(){
+        DialogService.Close();
+    }
+}

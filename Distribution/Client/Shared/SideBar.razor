@@ -1,0 +1,80 @@
+﻿@using Radzen.Blazor
+@using Radzen;
+
+
+
+<RadzenSidebar @bind-Expanded="@sidebar1Expanded"  >
+       
+
+        <RadzenPanelMenu>
+           
+            <RadzenPanelMenuItem Text="Home" Icon="home" />
+            <RadzenPanelMenuItem Text="Données de base">
+                <RadzenPanelMenuItem Text="Données de base">
+                    <RadzenPanelMenuItem Text="Clients" />
+                    <RadzenPanelMenuItem Text="Vendeurs" />
+                    <RadzenPanelMenuItem Text="Routes" />
+                    <RadzenPanelMenuItem Text="Affaire" />
+                    <RadzenPanelMenuItem Text="Depôts" />
+                    <RadzenPanelMenuItem Text="Secteurs" />
+                    <RadzenPanelMenuItem Text="Categories tarifaires" />
+                 </RadzenPanelMenuItem >
+                <RadzenPanelMenuItem Text="Catalogue" >
+                        <RadzenPanelMenuItem Text="Articles"/>
+                        <RadzenPanelMenuItem Text="Focus"/>
+                        <RadzenPanelMenuItem Text="Promotions" />
+                </RadzenPanelMenuItem >
+            </RadzenPanelMenuItem>
+
+            <RadzenPanelMenuItem Text="Stock">
+                <RadzenPanelMenuItem Text="Inventaire">
+                    <RadzenPanelMenuItem Text="Stock" />
+                    <RadzenPanelMenuItem Text="Srock Non Emballé" />
+                    
+                </RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Mouvement">
+                    <RadzenPanelMenuItem Text="Chargement" />
+                    <RadzenPanelMenuItem Text="Dechargement" />
+                    <RadzenPanelMenuItem Text="Mouvement de transfert" Path="counter" />
+                </RadzenPanelMenuItem>
+
+                <RadzenPanelMenuItem Text="Retour">
+                    <RadzenPanelMenuItem Text="Retour vendeur" />
+                    <RadzenPanelMenuItem Text="Retour client" />
+                    <RadzenPanelMenuItem Text="Retour client avoir" />
+                </RadzenPanelMenuItem>
+                
+               
+           </RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="Visites" />
+            <RadzenPanelMenuItem Text="Facturation">
+                <RadzenPanelMenuItem Text="Factures" />
+                <RadzenPanelMenuItem Text="Règlements" />
+                <RadzenPanelMenuItem Text="Précommande" />
+            </RadzenPanelMenuItem>
+
+            <RadzenPanelMenuItem Text="Reporting">
+                <RadzenPanelMenuItem Text="Rapports de clôtures" />
+                <RadzenPanelMenuItem Text="Etat de clôture" />
+                <RadzenPanelMenuItem Text="Rapport de caisse" />
+            </RadzenPanelMenuItem>
+
+            <RadzenPanelMenuItem Text="Paramètres">
+                <RadzenPanelMenuItem Text="Organisations" />
+                <RadzenPanelMenuItem Text="Importer/Exporter" />
+                <RadzenPanelMenuItem Text="Cartographie globale" />
+            </RadzenPanelMenuItem>
+        <RadzenPanelMenuItem Text="Users" Path="/users"  Icon="account_box" />
+        </RadzenPanelMenu>
+       
+    </RadzenSidebar>
+
+  
+@code {
+    [Parameter] public  bool sidebar1Expanded { get; set; }
+
+    public async Task Go(){
+        _navigationManager.NavigateTo("/ListUsers");
+    }
+
+}

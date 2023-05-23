@@ -1,0 +1,96 @@
+﻿@page "/ListUsers"
+
+@using Distribution.Shared
+@using Radzen
+@using Radzen.Blazor
+@inject HttpClient Http
+@inject DialogService dialogService
+
+
+
+
+       <RadzenText Style="font-size: x-large;font-weight: bold;" Text="Liste des utilisateurs"/>
+       <br/>
+       <div class="flex-column">
+               <RadzenButton Text="Add User" Icon=""  Click="InvokeModal" />
+    <RadzenButton Text="Refraichir" Icon="autorenew" Click="GetAll" />
+
+       </div>
+<br />
+        
+@*<RadzenButton Text=@($"Show OrderID:  details") Click="@(args => dialogService.Open<RegisterUserModal>($"Order ",
+                        new Dictionary<string, object>() { { "OrderID", user } },
+                        new DialogOptions(){ Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" }))" />
+*@<RadzenDataGrid Data="@_usersList" TItem="UserLoginDto" PagerPosition="@pagerPosition" AllowPaging="true" AllowFiltering="true" AllowSorting="true">
+
+    <Columns>
+        <RadzenDataGridColumn TItem="UserLoginDto" Property="UserName"  Title="UserName" />
+        <RadzenDataGridColumn TItem="UserLoginDto" Property="FirstName" Title="FirstName" />
+        <RadzenDataGridColumn TItem="UserLoginDto" Property="LastName" Title="LastName" />
+        <RadzenDataGridColumn TItem="UserLoginDto" Property="Email" Title="Email" />
+        <RadzenDataGridColumn TItem="UserLoginDto" Property="PhoneNumber" Title=" Phone"/>
+     @*   <RadzenDataGridColumn TItem="UserLoginDto" Context="action" Title="Action">
+            <Template Context="action">
+            
+            <RadzenMenu>
+                <RadzenMenuItem Text="Modifier Profile" />
+                <RadzenMenuItem Text="Gérer les rôles" />
+
+        </RadzenMenu>
+            </Template>
+        </RadzenDataGridColumn>*@
+    </Columns>
+    
+</RadzenDataGrid>
+
+@code {
+    PagerPosition pagerPosition = PagerPosition.Bottom;
+
+    public  IEnumerable<UserLoginDto> _usersList{ get; set; }
+    public UserLoginDto user { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("in onitialized");
+        await GetAll();
+
+    }
+
+
+    public async Task GetAll()
+    {
+        try
+        {
+
+            var response = await _httpClient.GetAsync("api/User/");
+            var result = await response.Content.ReadFromJsonAsync<IEnumerable<UserLoginDto>>();
+
+            _usersList = result;
+
+
+        }
+        catch(Exception e){
+
+        }
+
+    }
+
+    //private async Task InvokeModal(){
+    //    _navigationManager.NavigateTo("/RegisterModal");
+    //}
+
+
+    private async Task InvokeModal()
+    {
+        dialogService.Open<RegisterUserModal>($"Register User ",null,  
+                        new DialogOptions() { Width = "528px", Height = "518px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
+
+    
+}
+}
+
+
+
+
+
+

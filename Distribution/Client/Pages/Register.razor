@@ -1,0 +1,33 @@
+﻿@page "/Register"
+@using Blazored.LocalStorage
+@using Distribution.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+
+<h3>Login</h3>
+
+
+<EditForm Model="user" OnSubmit="AddLogin">
+    <label for="username">Name</label>
+    <InputText id="email" @bind-Value="user.Email" /> 
+    <label for="email">Email</label>
+    <InputText id="username" @bind-Value="user.UserName" />
+    <label for="password">Password</label>
+    <InputText id="password" @bind-Value="user.Password" type="password" />
+    <button type="submit" class="btn btn-primary">Enregistré</button>
+</EditForm>
+
+@code {
+    UserLoginDto user = new UserLoginDto();
+
+    public async Task AddLogin()
+    {
+        var result = await Http.PostAsJsonAsync("api/auth", user);
+        //var token = await result.Content.ReadAsStringAsync();
+        //Console.WriteLine(token);
+        //await LocalStorage.SetItemAsync("token", token);
+        //await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+}

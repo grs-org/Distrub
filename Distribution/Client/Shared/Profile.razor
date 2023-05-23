@@ -1,0 +1,60 @@
+﻿@using Distribution.Client.Extensions
+@using Radzen.Blazor
+@using Radzen;
+
+<div class="profile">
+    <RadzenProfileMenu>
+        <Template>
+            <RadzenGravatar Email="user@example.com"> Amed
+            </RadzenGravatar>
+        </Template>
+        <ChildContent>
+            <RadzenProfileMenuItem Text="Edit Profile" Path="buttons" Icon="account_circle"></RadzenProfileMenuItem>
+            <RadzenProfileMenuItem Text="Settings" Path="menu" Icon="line_weight"></RadzenProfileMenuItem>
+            <RadzenProfileMenuItem Text="Log out"   @onclick=LogOut Icon="attach_file"></RadzenProfileMenuItem>
+            
+        </ChildContent>
+    </RadzenProfileMenu>
+</div>
+
+@code {
+
+    public string CurrentUserId { get; set; }
+    public string UserName { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var state = await _stateProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+        if (user == null) return;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            CurrentUserId = user.GetUserId();
+            
+
+        }
+    }
+
+   public  async Task LogOut()
+    {
+
+        try
+        {
+            await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("refreshToken");
+            ((UniStateProvider)_stateProvider).MarkUserAsLoggedOut();
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+            _navigationManager.NavigateTo("/login");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+
+            _navigationManager.NavigateTo(_navigationManager.Uri, forceLoad: true);
+        }
+    }
+
+}
+
